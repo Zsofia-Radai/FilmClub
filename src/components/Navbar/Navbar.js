@@ -37,11 +37,16 @@ function Navbar() {
 		}
 	}
 
+	async function handleLogoClick() {
+		const request = await axios.get(requests.getPopular);
+			setMovies(request.data.results);
+	}
+
 	return (
 		<nav>
 			<MenuIcon className="hamburger-icon" onClick={toggleNav} />
 
-			<div className="logo">FilmClub</div>
+			<div className="logo" onClick={() => handleLogoClick()}>FilmClub</div>
 
 			{(toggleMenu || screenWidth > 1100) && (
 				<div className="menu">

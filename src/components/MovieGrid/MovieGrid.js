@@ -17,9 +17,9 @@ function MovieGrid() {
 			return request;
 		}
 		fetchPopular();
-	}, []);
+	}, [setMovies]);
 
-	return (
+	return ( movies && 
         <div className="movie-grid">
             {movies?.map(movie => (
                 <Poster key={movie.id} movie={movie} />
