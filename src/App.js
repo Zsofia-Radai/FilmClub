@@ -1,12 +1,15 @@
-import './App.css';
-import FilmClub from './components/FilmClub';
+import "./App.css";
+import FilmClub from "./components/FilmClub";
+import { RecoilRoot } from "recoil";
 
 function App() {
-  return (
-    <div className="App">
-      <FilmClub />
-    </div>
-  );
+	return (
+		<RecoilRoot>
+			<div className="App">
+				<FilmClub />
+			</div>
+		</RecoilRoot>
+	);
 }
 
 export default App;
