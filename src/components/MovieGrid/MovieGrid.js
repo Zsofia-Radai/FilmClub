@@ -12,7 +12,6 @@ function MovieGrid() {
 	useEffect(() => {
 		async function fetchPopular() {
 			const request = await axios.get(requests.getPopular);
-            console.log(request);
 			setMovies(request.data.results);
 			return request;
 		}

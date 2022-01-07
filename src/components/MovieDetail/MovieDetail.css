@@ -1,0 +1,5 @@
+.movie-detail-poster {
+    max-height: 500px; 
+    max-width: 325px;
+    height: 100%;
+}

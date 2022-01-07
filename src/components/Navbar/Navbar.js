@@ -7,12 +7,14 @@ import "./Navbar.css";
 import requests from "../../requests";
 import { useRecoilState } from "recoil";
 import { displayedMoviesState } from "../../atoms/movieAtom";
+import { useNavigate} from 'react-router-dom';
 
 function Navbar() {
 	const [toggleMenu, setToggleMenu] = useState(false);
 	const [searchString, setSearchString] = useState('');
 	const [movies, setMovies] = useRecoilState(displayedMoviesState);
 	const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const changeWidth = () => {
@@ -31,22 +33,17 @@ function Navbar() {
 
 	async function searchMovie(event) {
 		if (event.key === 'Enter') {
-			const request = await axios.get(`${requests.searchMovie}${searchString}`);
+			const request = await axios.get(`${requests.getMovie}${searchString}`);
 			setMovies(request.data.results);
 			setSearchString('');
 		}
-	}
-
-	async function handleLogoClick() {
-		const request = await axios.get(requests.getPopular);
-			setMovies(request.data.results);
 	}
 
 	return (
 		<nav>
 			<MenuIcon className="hamburger-icon" onClick={toggleNav} />
 
-			<div className="logo" onClick={() => handleLogoClick()}>FilmClub</div>
+			<div className="logo" onClick={() => navigate("/")}>FilmClub</div>
 
 			{(toggleMenu || screenWidth > 1100) && (
 				<div className="menu">
