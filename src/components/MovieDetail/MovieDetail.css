@@ -1,5 +1,22 @@
+.movie-details-container {
+    display: flex;
+    align-items: start;
+    justify-content: center;
+}
+
 .movie-detail-poster {
-    max-height: 500px; 
-    max-width: 325px;
+    max-width: 30%;
     height: 100%;
+}
+
+.movie-details {
+    width: 60%;
+    background: black;
+    color: white;
+    text-align: start;
+    padding: 20px;
+}
+
+.movie-details div {
+    margin-bottom: 20px;
 }

@@ -34,8 +34,10 @@ function Navbar() {
 	async function searchMovie(event) {
 		if (event.key === 'Enter') {
 			const request = await axios.get(`${requests.getMovie}${searchString}`);
+			setToggleMenu(!toggleMenu);
 			setMovies(request.data.results);
 			setSearchString('');
+			navigate("/");
 		}
 	}
 

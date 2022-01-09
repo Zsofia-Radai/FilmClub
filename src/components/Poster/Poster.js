@@ -22,7 +22,7 @@ function Poster({ movie }) {
 
 	function handlePosterClick() {
 		setSelectedMovieId(movie.id);
-		navigate(`/movies/${movie.id}`);
+		setTimeout(() => navigate(`/movies/${movie.id}`), 100);
 	}
 
 	return (
