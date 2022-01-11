@@ -2,7 +2,7 @@ import "./Poster.css";
 import ReactTooltip from "react-tooltip";
 import star from "../../resources/gold_star.png";
 import NAPoster from "../../resources/no_poster.png";
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from "recoil";
 import { selectedMovie } from "../../atoms/movieAtom";
 import { useEffect } from "react";
