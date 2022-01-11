@@ -67,7 +67,7 @@ function MovieDetail() {
 					</div>
 				)}
 			</div>
-            <RewindIcon className="back-icon" onClick={() => navigate("/")} />
+            <RewindIcon className="back-icon" onClick={() => navigate(-1)} />
 		</>
 	);
 }

@@ -2,23 +2,19 @@ import { useEffect, useState } from "react";
 import requests from "../../requests";
 import axios from "../../axios";
 import Poster from "../Poster/Poster";
-import { displayedMoviesState } from "../../atoms/movieAtom";
+import { displayedMoviesState, loadingState } from "../../atoms/movieAtom";
 import "./MovieGrid.css";
 import { useRecoilState } from "recoil";
 import ClipLoader from "react-spinners/ClipLoader";
 
 function MovieGrid() {
 	const [movies, setMovies] = useRecoilState(displayedMoviesState);
-	const [isLoading, setIsloading] = useState(true);
+	const [isLoading, setIsloading] = useRecoilState(loadingState);
+
+	console.log(isLoading);
 
 	useEffect(() => {
-		async function fetchPopular() {
-			const request = await axios.get(requests.getPopular);
-			setMovies(request.data.results);
-			setIsloading(false);
-			return request;
-		}
-		fetchPopular();
+		setIsloading(false);
 	}, [setMovies]);
 
 	return isLoading ? (

@@ -6,13 +6,14 @@ import axios from "../../axios";
 import "./Navbar.css";
 import requests from "../../requests";
 import { useRecoilState } from "recoil";
-import { displayedMoviesState } from "../../atoms/movieAtom";
+import { displayedMoviesState, loadingState } from "../../atoms/movieAtom";
 import { useNavigate} from 'react-router-dom';
 
 function Navbar() {
 	const [toggleMenu, setToggleMenu] = useState(false);
 	const [searchString, setSearchString] = useState('');
 	const [movies, setMovies] = useRecoilState(displayedMoviesState);
+	const [isLoading, setIsloading] = useRecoilState(loadingState);
 	const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 	const navigate = useNavigate();
 
@@ -30,14 +31,28 @@ function Navbar() {
 	const toggleNav = () => {
 		setToggleMenu(!toggleMenu);
 	};
+	
+	async function fetchPopular() {
+		const request = await axios.get(requests.getPopular);
+		setMovies(request.data.results);
+		setIsloading(false);
+		navigate("/");
+		return request;
+	}
 
 	async function searchMovie(event) {
 		if (event.key === 'Enter') {
-			const request = await axios.get(`${requests.getMovie}${searchString}`);
-			setToggleMenu(!toggleMenu);
-			setMovies(request.data.results);
-			setSearchString('');
-			navigate("/");
+			setIsloading(true);
+			async function getMovies() {
+				const request = await axios.get(`${requests.getMovie}${searchString}`);
+				setToggleMenu(!toggleMenu);
+				setMovies(request.data.results);
+				setSearchString('');
+				setIsloading(false);
+				return request;
+			}
+			getMovies();
+			navigate(`/search/${searchString}`);
 		}
 	}
 
@@ -45,7 +60,7 @@ function Navbar() {
 		<nav>
 			<MenuIcon className="hamburger-icon" onClick={toggleNav} />
 
-			<div className="logo" onClick={() => navigate("/")}>FilmClub</div>
+			<div className="logo" onClick={() => fetchPopular()}>FilmClub</div>
 
 			{(toggleMenu || screenWidth > 1100) && (
 				<div className="menu">
