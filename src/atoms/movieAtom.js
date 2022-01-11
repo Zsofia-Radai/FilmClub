@@ -20,7 +20,7 @@ export const selectedMovie = atom({
     default: null
 });
 
-export const loadingState = atom({
-    key: "isLoading",
-    default: true
+export const loadedState = atom({
+    key: "loadedState",
+    default: false
 });

@@ -3,10 +3,8 @@ import ReactTooltip from "react-tooltip";
 import star from "../../resources/gold_star.png";
 import NAPoster from "../../resources/no_poster.png";
 import { useNavigate } from 'react-router-dom';
-import { useHistory } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { selectedMovie } from "../../atoms/movieAtom";
-import { useEffect } from "react";
 
 const poster_base_url = "https://image.tmdb.org/t/p/original/";
 

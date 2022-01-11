@@ -6,14 +6,14 @@ import axios from "../../axios";
 import "./Navbar.css";
 import requests from "../../requests";
 import { useRecoilState } from "recoil";
-import { displayedMoviesState, loadingState } from "../../atoms/movieAtom";
+import { displayedMoviesState, loadedState } from "../../atoms/movieAtom";
 import { useNavigate} from 'react-router-dom';
 
 function Navbar() {
 	const [toggleMenu, setToggleMenu] = useState(false);
 	const [searchString, setSearchString] = useState('');
 	const [movies, setMovies] = useRecoilState(displayedMoviesState);
-	const [isLoading, setIsloading] = useRecoilState(loadingState);
+	const [isLoaded, setIsloaded] = useRecoilState(loadedState);
 	const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 	const navigate = useNavigate();
 
@@ -35,20 +35,20 @@ function Navbar() {
 	async function fetchPopular() {
 		const request = await axios.get(requests.getPopular);
 		setMovies(request.data.results);
-		setIsloading(false);
+		setIsloaded(true);
 		navigate("/");
 		return request;
 	}
 
 	async function searchMovie(event) {
 		if (event.key === 'Enter') {
-			setIsloading(true);
+			setIsloaded(false);
 			async function getMovies() {
 				const request = await axios.get(`${requests.getMovie}${searchString}`);
 				setToggleMenu(!toggleMenu);
 				setMovies(request.data.results);
 				setSearchString('');
-				setIsloading(false);
+				setIsloaded(true);
 				return request;
 			}
 			getMovies();

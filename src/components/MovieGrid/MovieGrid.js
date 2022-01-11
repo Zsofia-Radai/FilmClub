@@ -2,24 +2,20 @@ import { useEffect, useState } from "react";
 import requests from "../../requests";
 import axios from "../../axios";
 import Poster from "../Poster/Poster";
-import { displayedMoviesState, loadingState } from "../../atoms/movieAtom";
+import { displayedMoviesState, loadedState } from "../../atoms/movieAtom";
 import "./MovieGrid.css";
 import { useRecoilState } from "recoil";
 import ClipLoader from "react-spinners/ClipLoader";
 
 function MovieGrid() {
 	const [movies, setMovies] = useRecoilState(displayedMoviesState);
-	const [isLoading, setIsloading] = useRecoilState(loadingState);
-
-	console.log(isLoading);
+	const [isLoaded, setIsloaded] = useRecoilState(loadedState);
 
 	useEffect(() => {
-		setIsloading(false);
+		setIsloaded(true);
 	}, [setMovies]);
 
-	return isLoading ? (
-		<ClipLoader />
-	) : (
+	return isLoaded ? (
 		movies && (
 			<div className="movie-grid">
 				{movies?.map((movie) => (
@@ -27,7 +23,7 @@ function MovieGrid() {
 				))}
 			</div>
 		)
-	);
+	) : <ClipLoader />
 }
 
 export default MovieGrid;
