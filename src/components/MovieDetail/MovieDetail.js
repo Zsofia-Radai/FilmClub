@@ -19,6 +19,8 @@ function MovieDetail() {
 	const [credits, setCredits] = useState();
     const navigate = useNavigate();
 
+	console.log(isLoading);
+
 	useEffect(() => {
 		async function getMovieDetails() {
 			if (!movieId) return;
@@ -63,6 +65,7 @@ function MovieDetail() {
 							| {movieDetails.release_date} |{" "}
 							{movieDetails.original_language.toUpperCase()}
 						</div>
+						<div>Cast: {credits.cast.slice(0, 5).map(actor => actor.name).join(", ")}</div>
 						<div>{movieDetails.overview}</div>
 					</div>
 				)}
