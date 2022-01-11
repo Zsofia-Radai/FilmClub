@@ -22,3 +22,9 @@
         width: 100%;
     }
 }
+
+@media screen and (min-width: 2000px) {
+    .page-container {
+        width: 40%;
+    }
+}

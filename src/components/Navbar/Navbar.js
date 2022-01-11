@@ -6,14 +6,20 @@ import axios from "../../axios";
 import "./Navbar.css";
 import requests from "../../requests";
 import { useRecoilState } from "recoil";
-import { displayedMoviesState, loadedState } from "../../atoms/movieAtom";
-import { useNavigate} from 'react-router-dom';
+import {
+	displayedMoviesState,
+	genresState,
+	loadedState,
+} from "../../atoms/movieAtom";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
 	const [toggleMenu, setToggleMenu] = useState(false);
-	const [searchString, setSearchString] = useState('');
+	const [toggleCategories, setToggleCategories] = useState(false);
+	const [searchString, setSearchString] = useState("");
 	const [movies, setMovies] = useRecoilState(displayedMoviesState);
 	const [isLoaded, setIsloaded] = useRecoilState(loadedState);
+	const genres = useRecoilState(genresState);
 	const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 	const navigate = useNavigate();
 
@@ -31,7 +37,11 @@ function Navbar() {
 	const toggleNav = () => {
 		setToggleMenu(!toggleMenu);
 	};
-	
+
+	const handleCategoriesClick = () => {
+		setToggleCategories(!toggleCategories);
+	};
+
 	async function fetchPopular() {
 		const request = await axios.get(requests.getPopular);
 		setMovies(request.data.results);
@@ -41,13 +51,15 @@ function Navbar() {
 	}
 
 	async function searchMovie(event) {
-		if (event.key === 'Enter') {
+		if (event.key === "Enter") {
 			setIsloaded(false);
 			async function getMovies() {
-				const request = await axios.get(`${requests.getMovie}${searchString}`);
+				const request = await axios.get(
+					`${requests.getMovie}${searchString}`
+				);
 				setToggleMenu(!toggleMenu);
 				setMovies(request.data.results);
-				setSearchString('');
+				setSearchString("");
 				setIsloaded(true);
 				return request;
 			}
@@ -56,48 +68,72 @@ function Navbar() {
 		}
 	}
 
+	const categoriesSubmenu = (
+		<>
+			<hr className="submenu-separator" />
+			<div className="categories-submenu">
+				{genres[0].map((genre) => (
+					<div className="genre-item" key={genre.id}>{genre.name}</div>
+				))}
+			</div>
+		</>
+	);
+
+	const selectedStyle = toggleCategories ? "item-selected" : "";
+
 	return (
-		<nav>
-			<MenuIcon className="hamburger-icon" onClick={toggleNav} />
+		<>
+			<nav>
+				<MenuIcon
+					className="hamburger-icon"
+					onClick={() => toggleNav()}
+				/>
 
-			<div className="logo" onClick={() => fetchPopular()}>FilmClub</div>
-
-			{(toggleMenu || screenWidth > 1100) && (
-				<div className="menu">
-					<ul>
-						<li className="item has-submenu">
-							Categories
-							{/* <ul className="submenu">
-								<li>Action</li>
-								<li>Adventure</li>
-								<li>Drama</li>
-								<li>Horror</li>
-							</ul> */}
-						</li>
-						<li className="search-input">
-							<SearchIcon className="icon" />
-							<input
-								className="search"
-								onChange={(event) => setSearchString(event.target.value)}
-								onKeyUp={searchMovie}
-								value={searchString}
-								type="text"
-								placeholder="Search in titles"
-							/>
-						</li>
-
-						<li className="item user-admission">
-							<UserAddIcon className="icon" />
-							<div>Sign up</div>
-						</li>
-						<li className="item user-admission">
-							<LoginIcon className="icon" />
-							<div>Log In</div>
-						</li>
-					</ul>
+				<div className="logo" onClick={() => fetchPopular()}>
+					FilmClub
 				</div>
-			)}
-		</nav>
+
+				{(toggleMenu || screenWidth > 1100) && (
+					<div className="menu">
+						<ul>
+							<li
+								className={`item ${selectedStyle}`}
+								onClick={() => handleCategoriesClick()}
+							>
+								<div>Categories</div>
+							</li>
+
+							{toggleCategories && screenWidth < 1100 && categoriesSubmenu}
+
+							<li className="search-input">
+								<SearchIcon className="icon" />
+								<input
+									className="search"
+									onChange={(event) =>
+										setSearchString(event.target.value)
+									}
+									onKeyUp={searchMovie}
+									value={searchString}
+									type="text"
+									placeholder="Search in titles"
+								/>
+							</li>
+
+							<li className="item user-admission">
+								<UserAddIcon className="icon" />
+								<div>Sign up</div>
+							</li>
+							<li className="item user-admission">
+								<LoginIcon className="icon" />
+								<div>Log In</div>
+							</li>
+						</ul>
+					</div>
+				)}
+			</nav>
+
+			{toggleCategories && screenWidth > 1100 && categoriesSubmenu}
+		</>
 	);
 }
 

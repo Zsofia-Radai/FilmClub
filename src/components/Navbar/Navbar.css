@@ -1,12 +1,13 @@
 nav {
 	position: relative;
 	background: black;
-	border-radius: 5px;
-	margin: 2%;
+	border-radius: 5px 5px 0 0;
+	margin: 2% 2% 0;
 	display: flex;
 	align-items: center;
 	color: white;
 	justify-content: space-between;
+	padding: 0 5px 0 5px ;
 }
 
 .menu {
@@ -33,8 +34,11 @@ nav {
 }
 
 .item:hover {
-    border-bottom: 1px solid white;
     color: crimson;
+}
+
+.item-selected {
+	color: crimson;
 }
 
 .hamburger-icon {
@@ -67,10 +71,27 @@ nav {
 	margin: 0.5rem;
 }
 
+.categories-submenu {
+    background: black;
+    padding: 5px;
+    margin: 0 2%;
+    color: white;
+	display: flex;
+	flex-wrap: wrap;
+    justify-content: center;
+	gap: 1vh;
+}
+
+.submenu-separator {
+	background: black;
+    margin: 0 2%;
+}
+
 @media screen and (max-width: 1100px) {
 	nav {
 		flex-direction: column;
 		align-items: flex-start;
+		padding: 0;
 	}
 	.menu {
 		width: 100%;
@@ -95,7 +116,7 @@ nav {
 		display: block;
 	}
 
-    .item:hover, .search-input:hover {
+    .item:hover, .search-input:hover, .item-selected {
         border-bottom: 1px solid black;
         background-color: crimson;
         color: black;

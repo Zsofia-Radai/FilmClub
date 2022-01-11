@@ -19,8 +19,6 @@ function MovieDetail() {
 	const [credits, setCredits] = useState();
     const navigate = useNavigate();
 
-	console.log(isLoading);
-
 	useEffect(() => {
 		async function getMovieDetails() {
 			if (!movieId) return;
@@ -30,8 +28,6 @@ function MovieDetail() {
 			const creditsRequest = await axios.get(
 				`/movie/${movieId}/credits?api_key=${API_KEY}&language=en-US`
 			);
-			console.log(movieDetailsRequest.data);
-			console.log(creditsRequest.data);
 			setMovieDetails(movieDetailsRequest.data);
 			setCredits(creditsRequest.data);
 			setIsLoading(false);
