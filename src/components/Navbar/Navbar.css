@@ -35,6 +35,7 @@ nav {
 .item:hover, .item-selected, .genre-item:hover, .logo:hover {
     color: crimson;
 	cursor: pointer;
+	transition: all 0.2s ease-in-out;
 }
 
 .genre-selected {
@@ -80,6 +81,7 @@ nav {
 	flex-wrap: wrap;
     justify-content: center;
 	gap: 1vh;
+	border-radius: 0 0 5px 5px;
 }
 
 .submenu-separator {
