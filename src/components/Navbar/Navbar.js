@@ -21,6 +21,7 @@ function Navbar() {
 	const [isLoaded, setIsloaded] = useRecoilState(loadedState);
 	const genres = useRecoilState(genresState);
 	const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+	const [selectedGenre, setSelectedGenre] = useState();
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -46,6 +47,7 @@ function Navbar() {
 		const request = await axios.get(requests.getPopular);
 		setMovies(request.data.results);
 		setIsloaded(true);
+		setSelectedGenre(undefined);
 		navigate("/");
 		return request;
 	}
@@ -53,6 +55,7 @@ function Navbar() {
 	async function searchMovie(event) {
 		if (event.key === "Enter") {
 			setIsloaded(false);
+			setSelectedGenre(undefined);
 			async function getMovies() {
 				const request = await axios.get(
 					`${requests.getMovie}${searchString}`
@@ -68,12 +71,26 @@ function Navbar() {
 		}
 	}
 
+	async function searchMovieByCategory(genre) {
+		setIsloaded(false);
+		setSelectedGenre(genre.id);
+		async function getMovies() {
+			const request = await axios.get(`${requests.getMovieByGenre}${genre.id}`);
+			setIsloaded(true);
+			setMovies(request.data.results);
+		}
+		getMovies();
+		navigate(`/search/${genre.name.toLowerCase()}`);
+	}
+
+	const selectedGenreStyle = (genre) => selectedGenre === genre.id ? "genre-selected" : "";
+
 	const categoriesSubmenu = (
 		<>
 			<hr className="submenu-separator" />
 			<div className="categories-submenu">
 				{genres[0].map((genre) => (
-					<div className="genre-item" key={genre.id}>{genre.name}</div>
+					<div className={`genre-item ${selectedGenreStyle(genre)}`} key={genre.id} onClick={() => searchMovieByCategory(genre)}>{genre.name}</div>
 				))}
 			</div>
 		</>

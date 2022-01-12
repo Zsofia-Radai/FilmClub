@@ -26,18 +26,18 @@ nav {
 	margin-right: 20px;
 	font-size: 16px;
 	color: #f1f1f1;
-	cursor: pointer;
 	display: flex;
 	align-items: center;
     transition: all 0.2s ease-in-out;
     border: 1px solid black;
 }
 
-.item:hover {
+.item:hover, .item-selected, .genre-item:hover, .logo:hover {
     color: crimson;
+	cursor: pointer;
 }
 
-.item-selected {
+.genre-selected {
 	color: crimson;
 }
 

@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
-import requests from "../../requests";
-import axios from "../../axios";
+import { useEffect } from "react";
 import Poster from "../Poster/Poster";
 import { displayedMoviesState, loadedState } from "../../atoms/movieAtom";
 import "./MovieGrid.css";
@@ -13,17 +11,17 @@ function MovieGrid() {
 
 	useEffect(() => {
 		setIsloaded(true);
-	}, [setMovies]);
+	}, [setMovies, setIsloaded]);
 
 	return isLoaded ? (
-		movies && (
-			<div className="movie-grid">
-				{movies?.map((movie) => (
-					<Poster key={movie.id} movie={movie} />
-				))}
-			</div>
-		)
-	) : <ClipLoader />
+		<div className="movie-grid">
+			{movies?.map((movie) => (
+				<Poster key={movie.id} movie={movie} />
+			))}
+		</div>
+	) : (
+		<ClipLoader />
+	);
 }
 
 export default MovieGrid;
