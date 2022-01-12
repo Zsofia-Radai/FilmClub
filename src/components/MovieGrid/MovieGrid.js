@@ -13,12 +13,20 @@ function MovieGrid() {
 		setIsloaded(true);
 	}, [setMovies, setIsloaded]);
 
-	return isLoaded ? ( movies.length > 0 ? (
+	let posters = (
 		<div className="movie-grid">
 			{movies?.map((movie) => (
 				<Poster key={movie.id} movie={movie} />
 			))}
-		</div>) : <div className="no-results">No results</div>
+		</div>
+	);
+
+	return isLoaded ? (
+		movies.length > 0 ? (
+			<div>{posters}</div>
+		) : (
+			<div className="no-results">No results</div>
+		)
 	) : (
 		<ClipLoader />
 	);
