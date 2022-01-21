@@ -20,7 +20,7 @@ const genres = selector({
 
 export const displayedMoviesState = atom({
 	key: "displayedMoviesState",
-	default: popular,
+	default: [],
 });
 
 export const selectedMovie = atom({
@@ -28,8 +28,18 @@ export const selectedMovie = atom({
 	default: null,
 });
 
-export const loadedState = atom({
-	key: "loadedState",
+export const searchStringState = atom({
+	key: "searchStringState",
+	default: ""
+})
+
+export const pageNumberState = atom({
+	key: "pageNumberState",
+	default: 1
+})
+
+export const pageLoadedState = atom({
+	key: "pageLoadedState",
 	default: false,
 });
 
@@ -37,3 +47,8 @@ export const genresState = atom({
     key: "genresState",
     default: genres
 });
+
+export const selectedGenreState = atom({
+	key: "selectedGenreState",
+	default: null
+})
