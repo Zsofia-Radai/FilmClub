@@ -1,20 +1,30 @@
-import { UserAddIcon } from "@heroicons/react/solid";
 import { LoginIcon, MenuIcon } from "@heroicons/react/outline";
-import { SearchIcon } from "@heroicons/react/solid";
+import { SearchIcon, UserAddIcon } from "@heroicons/react/solid";
 import { useEffect, useState } from "react";
-import axios from "../../axios";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+	fetchByGenre,
+	fetchByQuery,
+	fetchGenres,
+	fetchPopular,
+} from "../../store/moviesActions";
+import { moviesActions } from "../../store/moviesSlice";
 import "./Navbar.css";
-import requests from "../../requests";
-import { useRecoilState } from "recoil";
-import { displayedMoviesState } from "../../atoms/movieAtom";
-import { useNavigate} from 'react-router-dom';
 
 function Navbar() {
 	const [toggleMenu, setToggleMenu] = useState(false);
-	const [searchString, setSearchString] = useState('');
-	const [movies, setMovies] = useRecoilState(displayedMoviesState);
+	const [toggleCategories, setToggleCategories] = useState(false);
+	const [searchString, setSearchString] = useState("");
 	const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 	const navigate = useNavigate();
+	const genres = useSelector((state) => state.genres);
+	const selectedGenre = useSelector((state) => state.selectedGenre);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(fetchGenres());
+	}, [dispatch]);
 
 	useEffect(() => {
 		const changeWidth = () => {
@@ -31,56 +41,108 @@ function Navbar() {
 		setToggleMenu(!toggleMenu);
 	};
 
-	async function searchMovie(event) {
-		if (event.key === 'Enter') {
-			const request = await axios.get(`${requests.getMovie}${searchString}`);
-			setMovies(request.data.results);
+	const handleCategoriesClick = () => {
+		setToggleCategories(!toggleCategories);
+	};
+
+	function getPopularMovies() {
+		setSearchString('');
+		dispatch(fetchPopular());
+		navigate("/");
+	}
+
+	function searchMovie(event) {
+		if (event.key === "Enter") {
+			dispatch(fetchByQuery(searchString));
+			navigate(`/search/${searchString}`);
 			setSearchString('');
 		}
 	}
 
+	function searchMovieByGenre(genre) {
+		setSearchString('');
+		dispatch(moviesActions.setSelectedGenre(genre.id));
+		dispatch(fetchByGenre(genre.id));
+		navigate(`/search/${genre.name.toLowerCase()}`);
+	}
+
+	const selectedGenreStyle = (genre) =>
+		selectedGenre === genre.id ? "genre-selected" : "";
+
+	const categoriesSubmenu = (
+		<>
+			<hr className="submenu-separator" />
+			<div className="categories-submenu">
+				{genres?.map((genre) => (
+					<div
+						className={`genre-item ${selectedGenreStyle(genre)}`}
+						key={genre.id}
+						onClick={() => searchMovieByGenre(genre)}
+					>
+						{genre.name}
+					</div>
+				))}
+			</div>
+		</>
+	);
+
+	const selectedStyle = toggleCategories ? "item-selected" : "";
+
 	return (
-		<nav>
-			<MenuIcon className="hamburger-icon" onClick={toggleNav} />
+		<>
+			<nav>
+				<MenuIcon
+					className="hamburger-icon"
+					onClick={() => toggleNav()}
+				/>
 
-			<div className="logo" onClick={() => navigate("/")}>FilmClub</div>
-
-			{(toggleMenu || screenWidth > 1100) && (
-				<div className="menu">
-					<ul>
-						<li className="item has-submenu">
-							Categories
-							{/* <ul className="submenu">
-								<li>Action</li>
-								<li>Adventure</li>
-								<li>Drama</li>
-								<li>Horror</li>
-							</ul> */}
-						</li>
-						<li className="search-input">
-							<SearchIcon className="icon" />
-							<input
-								className="search"
-								onChange={(event) => setSearchString(event.target.value)}
-								onKeyUp={searchMovie}
-								value={searchString}
-								type="text"
-								placeholder="Search in titles"
-							/>
-						</li>
-
-						<li className="item user-admission">
-							<UserAddIcon className="icon" />
-							<div>Sign up</div>
-						</li>
-						<li className="item user-admission">
-							<LoginIcon className="icon" />
-							<div>Log In</div>
-						</li>
-					</ul>
+				<div className="logo" onClick={() => getPopularMovies()}>
+					FilmClub
 				</div>
-			)}
-		</nav>
+
+				{(toggleMenu || screenWidth > 1100) && (
+					<div className="menu">
+						<ul>
+							<li
+								className={`item ${selectedStyle}`}
+								onClick={() => handleCategoriesClick()}
+							>
+								<div>Categories</div>
+							</li>
+
+							{toggleCategories &&
+								screenWidth < 1100 &&
+								categoriesSubmenu}
+
+							<li className="search-input">
+								<SearchIcon className="icon" />
+								<input
+									className="search"
+									onChange={(event) =>
+										setSearchString(event.target.value)
+									}
+									onKeyUp={searchMovie}
+									value={searchString}
+									type="text"
+									placeholder="Search in titles"
+								/>
+							</li>
+
+							<li className="item user-admission">
+								<UserAddIcon className="icon" />
+								<div>Sign up</div>
+							</li>
+							<li className="item user-admission">
+								<LoginIcon className="icon" />
+								<div>Log In</div>
+							</li>
+						</ul>
+					</div>
+				)}
+			</nav>
+
+			{toggleCategories && screenWidth > 1100 && categoriesSubmenu}
+		</>
 	);
 }
 

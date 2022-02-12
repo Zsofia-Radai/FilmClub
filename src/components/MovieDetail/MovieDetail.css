@@ -1,5 +1,42 @@
+.movie-details-container {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    margin: 2%;
+}
+
 .movie-detail-poster {
-    max-height: 500px; 
-    max-width: 325px;
+    border: 4px solid black;
+    max-width: 30%;
     height: 100%;
+}
+
+.movie-details {
+    background: black;
+    color: white;
+    text-align: start;
+    padding: 20px;
+}
+
+.movie-details div {
+    margin-bottom: 20px;
+}
+
+.back-icon {
+    height: 40px;
+    cursor: pointer;
+    float: left;
+    margin-left: 2%;
+}
+
+.back-icon:hover {
+    color: white;
+}
+
+.loader {
+    height: 30vh;
+    display: table-cell;
+    width: 85vh;
+    text-align: center;
+    vertical-align: middle
 }
