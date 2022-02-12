@@ -1,17 +1,11 @@
-import { useEffect } from "react";
-import Poster from "../Poster/Poster";
-import { displayedMoviesState, loadedState } from "../../atoms/movieAtom";
-import "./MovieGrid.css";
-import { useRecoilState } from "recoil";
+import { useSelector } from "react-redux";
 import ClipLoader from "react-spinners/ClipLoader";
+import Poster from "../Poster/Poster";
+import "./MovieGrid.css";
 
 function MovieGrid() {
-	const [movies, setMovies] = useRecoilState(displayedMoviesState);
-	const [isLoaded, setIsloaded] = useRecoilState(loadedState);
-
-	useEffect(() => {
-		setIsloaded(true);
-	}, [setMovies, setIsloaded]);
+	const movies = useSelector((state) => state.movies);
+	const loading = useSelector((state) => state.loading);
 
 	let posters = (
 		<div className="movie-grid">
@@ -21,14 +15,12 @@ function MovieGrid() {
 		</div>
 	);
 
-	return isLoaded ? (
-		movies.length > 0 ? (
-			<div>{posters}</div>
-		) : (
-			<div className="no-results">No results</div>
-		)
-	) : (
+	return loading ? (
 		<ClipLoader />
+	) : movies.length > 0 ? (
+		<div>{posters}</div>
+	) : (
+		<div className="no-results">No results</div>
 	);
 }
 

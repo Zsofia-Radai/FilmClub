@@ -1,28 +1,30 @@
-import { UserAddIcon } from "@heroicons/react/solid";
 import { LoginIcon, MenuIcon } from "@heroicons/react/outline";
-import { SearchIcon } from "@heroicons/react/solid";
+import { SearchIcon, UserAddIcon } from "@heroicons/react/solid";
 import { useEffect, useState } from "react";
-import axios from "../../axios";
-import "./Navbar.css";
-import requests from "../../requests";
-import { useRecoilState } from "recoil";
-import {
-	displayedMoviesState,
-	genresState,
-	loadedState,
-} from "../../atoms/movieAtom";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import {
+	fetchByGenre,
+	fetchByQuery,
+	fetchGenres,
+	fetchPopular,
+} from "../../store/moviesActions";
+import { moviesActions } from "../../store/moviesSlice";
+import "./Navbar.css";
 
 function Navbar() {
 	const [toggleMenu, setToggleMenu] = useState(false);
 	const [toggleCategories, setToggleCategories] = useState(false);
 	const [searchString, setSearchString] = useState("");
-	const [movies, setMovies] = useRecoilState(displayedMoviesState);
-	const [isLoaded, setIsloaded] = useRecoilState(loadedState);
-	const genres = useRecoilState(genresState);
 	const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-	const [selectedGenre, setSelectedGenre] = useState();
 	const navigate = useNavigate();
+	const genres = useSelector((state) => state.genres);
+	const selectedGenre = useSelector((state) => state.selectedGenre);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(fetchGenres());
+	}, [dispatch]);
 
 	useEffect(() => {
 		const changeWidth = () => {
@@ -43,45 +45,24 @@ function Navbar() {
 		setToggleCategories(!toggleCategories);
 	};
 
-	async function fetchPopular() {
-		const request = await axios.get(requests.getPopular);
-		setMovies(request.data.results);
-		setIsloaded(true);
-		setSelectedGenre(undefined);
+	function getPopularMovies() {
+		setSearchString('');
+		dispatch(fetchPopular());
 		navigate("/");
-		return request;
 	}
 
-	async function searchMovie(event) {
+	function searchMovie(event) {
 		if (event.key === "Enter") {
-			setIsloaded(false);
-			setSelectedGenre(undefined);
-			async function getMovies() {
-				const request = await axios.get(
-					`${requests.getMovie}${searchString}`
-				);
-				setToggleMenu(!toggleMenu);
-				setMovies(request.data.results);
-				setSearchString("");
-				setIsloaded(true);
-				return request;
-			}
-			getMovies();
+			dispatch(fetchByQuery(searchString));
 			navigate(`/search/${searchString}`);
+			setSearchString('');
 		}
 	}
 
-	async function searchMovieByGenre(genre) {
-		setIsloaded(false);
-		setSelectedGenre(genre.id);
-		async function getMovies() {
-			const request = await axios.get(
-				`${requests.getMovieByGenre}${genre.id}`
-			);
-			setIsloaded(true);
-			setMovies(request.data.results);
-		}
-		getMovies();
+	function searchMovieByGenre(genre) {
+		setSearchString('');
+		dispatch(moviesActions.setSelectedGenre(genre.id));
+		dispatch(fetchByGenre(genre.id));
 		navigate(`/search/${genre.name.toLowerCase()}`);
 	}
 
@@ -92,7 +73,7 @@ function Navbar() {
 		<>
 			<hr className="submenu-separator" />
 			<div className="categories-submenu">
-				{genres[0].map((genre) => (
+				{genres?.map((genre) => (
 					<div
 						className={`genre-item ${selectedGenreStyle(genre)}`}
 						key={genre.id}
@@ -115,7 +96,7 @@ function Navbar() {
 					onClick={() => toggleNav()}
 				/>
 
-				<div className="logo" onClick={() => fetchPopular()}>
+				<div className="logo" onClick={() => getPopularMovies()}>
 					FilmClub
 				</div>
 
