@@ -1,40 +1,32 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ClipLoader from "react-spinners/ClipLoader";
-import { useRecoilState } from "recoil";
-import {
-	displayedMoviesState,
-	pageLoadedState,
-	pageNumberState,
-} from "../../atoms/movieAtom";
 import useMovieSearch from "../../hooks/useMovieSearch";
+import { moviesActions } from "../../store/moviesSlice";
 import Poster from "../Poster/Poster";
 import "./MovieGrid.css";
 
 function MovieGrid() {
-	const [movies] = useRecoilState(displayedMoviesState);
-	const [isLoaded, setIsloaded] = useRecoilState(pageLoadedState);
-	const [pageNumber, setPageNumber] = useRecoilState(pageNumberState);
-
-	useEffect(() => {
-		setIsloaded(true);
-	}, [setIsloaded]);
-
+	const movies = useSelector((state) => state.movies);
+	const loading = useSelector((state) => state.loading);
+	const pageNumber = useSelector((state) => state.pageNumber);
+	const dispatch = useDispatch();
 	const observer = useRef();
 
-	const { hasMore, loading, error } = useMovieSearch(pageNumber);
+	const { hasMore, isLoading, error } = useMovieSearch(pageNumber);
 
 	const lastMovieElementRef = useCallback(
 		(node) => {
-			if (loading) return;
+			if (isLoading) return;
 			if (observer.current) observer.current.disconnect();
 			observer.current = new IntersectionObserver((entries) => {
 				if (entries[0].isIntersecting && hasMore) {
-					setPageNumber((prevPageNumber) => prevPageNumber + 1);
+					dispatch(moviesActions.setPageNumber(pageNumber + 1));
 				}
 			});
 			if (node) observer.current.observe(node);
 		},
-		[loading, hasMore]
+		[isLoading, hasMore, dispatch, pageNumber]
 	);
 
 	let posters = (
@@ -53,15 +45,20 @@ function MovieGrid() {
 		</div>
 	);
 
-	return (
-		<>
-			<div>{posters}</div>
-			<div>{loading && <ClipLoader />}</div>
-			<div>{error && "Error"}</div>
-			{movies.length === 0 && !loading && (
-				<div className="no-results">No results</div>
-			)}
-		</>
+	let displayedMessage = () => {
+		if (error) {
+			let errorMessage = `Error occured: ${error}`;
+			return <div className="error">{errorMessage}</div>;
+		}
+		return <div className="no-results">No results</div>;
+	};
+
+	return loading ? (
+		<ClipLoader />
+	) : movies.length > 0 ? (
+		<div>{posters}</div>
+	) : (
+		displayedMessage()
 	);
 }
 

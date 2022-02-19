@@ -1,34 +1,25 @@
 import { LoginIcon, MenuIcon } from "@heroicons/react/outline";
 import { SearchIcon, UserAddIcon } from "@heroicons/react/solid";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import {
-	displayedMoviesState,
-	genresState,
-	pageLoadedState,
-	pageNumberState,
-	searchStringState,
-	selectedGenreState,
-} from "../../atoms/movieAtom";
-import axios from "../../axios";
-import useMovieSearch from "../../hooks/useMovieSearch";
-import requests from "../../requests";
+import { fetchGenres } from "../../store/moviesActions";
+import { moviesActions } from "../../store/moviesSlice";
 import "./Navbar.css";
 
 function Navbar() {
 	const [toggleMenu, setToggleMenu] = useState(false);
 	const [toggleCategories, setToggleCategories] = useState(false);
 	const [searchString, setSearchString] = useState("");
-	const [movies, setMovies] = useRecoilState(displayedMoviesState);
-	const [isLoaded, setIsloaded] = useRecoilState(pageLoadedState);
-	const genres = useRecoilState(genresState);
 	const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-	const [selectedGenre, setSelectedGenre] =
-		useRecoilState(selectedGenreState);
-	const [pageNumber, setPageNumber] = useRecoilState(pageNumberState);
-	const [query, setQuery] = useRecoilState(searchStringState);
 	const navigate = useNavigate();
+	const genres = useSelector((state) => state.genres);
+	const selectedGenre = useSelector((state) => state.selectedGenre);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(fetchGenres());
+	}, [dispatch]);
 
 	useEffect(() => {
 		const changeWidth = () => {
@@ -49,24 +40,34 @@ function Navbar() {
 		setToggleCategories(!toggleCategories);
 	};
 
-	function goHome() {
-		setQuery("");
-		setPageNumber(1);
+	function getPopularMovies() {
+		dispatch(moviesActions.setSelectedGenre(null));
+		dispatch(moviesActions.setQuery(null));
+		switchSearchType();
 		navigate("/");
 	}
 
 	function searchMovie(event) {
 		if (event.key === "Enter") {
-			setQuery(event.target.value);
-			setSearchString("");
-			setPageNumber(1);
+			dispatch(moviesActions.setQuery(searchString));
+			dispatch(moviesActions.setSelectedGenre(null));
+			navigate(`/search/${searchString}`);
+			switchSearchType();
 		}
 	}
 
 	function searchMovieByGenre(genre) {
-		setSelectedGenre(genre.id);
+		dispatch(moviesActions.setSelectedGenre(genre.id));
 		navigate(`/search/${genre.name.toLowerCase()}`);
-		setPageNumber(1);	
+		dispatch(moviesActions.setQuery(null));
+		switchSearchType();
+	}
+
+	function switchSearchType() {
+		dispatch(moviesActions.setMovies([]));
+		dispatch(moviesActions.setPageNumber(1));
+		dispatch(moviesActions.setLoading(true));
+		setSearchString("");
 	}
 
 	const selectedGenreStyle = (genre) =>
@@ -76,7 +77,7 @@ function Navbar() {
 		<>
 			<hr className="submenu-separator" />
 			<div className="categories-submenu">
-				{genres[0].map((genre) => (
+				{genres?.map((genre) => (
 					<div
 						className={`genre-item ${selectedGenreStyle(genre)}`}
 						key={genre.id}
@@ -99,7 +100,7 @@ function Navbar() {
 					onClick={() => toggleNav()}
 				/>
 
-				<div className="logo" onClick={() => goHome()}>
+				<div className="logo" onClick={() => getPopularMovies()}>
 					FilmClub
 				</div>
 

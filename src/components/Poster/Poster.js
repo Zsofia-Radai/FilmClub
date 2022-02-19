@@ -3,14 +3,14 @@ import ReactTooltip from "react-tooltip";
 import star from "../../resources/gold_star.png";
 import NAPoster from "../../resources/no_poster.png";
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from "recoil";
-import { selectedMovie } from "../../atoms/movieAtom";
+import { useDispatch } from "react-redux";
+import { moviesActions } from "../../store/moviesSlice"
 
 const poster_base_url = "https://image.tmdb.org/t/p/original/";
 
 function Poster({ movie }) {
 	const navigate = useNavigate();
-	const [selectedMovieId, setSelectedMovieId] = useRecoilState(selectedMovie);
+	const dispatch = useDispatch();
 
 	const tooltip = (
 		<>
@@ -20,7 +20,7 @@ function Poster({ movie }) {
 	);
 
 	function handlePosterClick() {
-		setSelectedMovieId(movie.id);
+		dispatch(moviesActions.setSelectedMovieId(movie.id));
 		setTimeout(() => navigate(`/movies/${movie.id}`), 100);
 	}
 

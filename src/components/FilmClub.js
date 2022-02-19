@@ -1,7 +1,7 @@
-import "./FilmClub.css";
-import banner from "../resources/banner.jpg";
-import Navbar from "./Navbar/Navbar";
 import { Outlet } from "react-router-dom";
+import banner from "../resources/banner.jpg";
+import "./FilmClub.css";
+import Navbar from "./Navbar/Navbar";
 
 function FilmClub() {
 	return (
