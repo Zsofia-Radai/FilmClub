@@ -5,7 +5,9 @@ const initialState = {
 	genres: [], 
 	selectedMovieId: null,
 	selectedGenre: null,
-	loading: true
+	query: null,
+	loading: true,
+	pageNumber: 1
  };
 
 const moviesSlice = createSlice({
@@ -24,8 +26,14 @@ const moviesSlice = createSlice({
  		setSelectedGenre(state, action) {
 			state.selectedGenre = action.payload;
 		},
+		setQuery(state, action) {
+			state.query = action.payload
+		},
 		setLoading(state, action) {
 			state.loading = action.payload;
+		},
+		setPageNumber(state, action) {
+			state.pageNumber = action.payload;
 		}
 	},
 });

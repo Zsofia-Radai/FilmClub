@@ -3,12 +3,7 @@ import { SearchIcon, UserAddIcon } from "@heroicons/react/solid";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-	fetchByGenre,
-	fetchByQuery,
-	fetchGenres,
-	fetchPopular,
-} from "../../store/moviesActions";
+import { fetchGenres } from "../../store/moviesActions";
 import { moviesActions } from "../../store/moviesSlice";
 import "./Navbar.css";
 
@@ -46,24 +41,33 @@ function Navbar() {
 	};
 
 	function getPopularMovies() {
-		setSearchString('');
-		dispatch(fetchPopular());
+		dispatch(moviesActions.setSelectedGenre(null));
+		dispatch(moviesActions.setQuery(null));
+		switchSearchType();
 		navigate("/");
 	}
 
 	function searchMovie(event) {
 		if (event.key === "Enter") {
-			dispatch(fetchByQuery(searchString));
+			dispatch(moviesActions.setQuery(searchString));
+			dispatch(moviesActions.setSelectedGenre(null));
 			navigate(`/search/${searchString}`);
-			setSearchString('');
+			switchSearchType();
 		}
 	}
 
 	function searchMovieByGenre(genre) {
-		setSearchString('');
 		dispatch(moviesActions.setSelectedGenre(genre.id));
-		dispatch(fetchByGenre(genre.id));
 		navigate(`/search/${genre.name.toLowerCase()}`);
+		dispatch(moviesActions.setQuery(null));
+		switchSearchType();
+	}
+
+	function switchSearchType() {
+		dispatch(moviesActions.setMovies([]));
+		dispatch(moviesActions.setPageNumber(1));
+		dispatch(moviesActions.setLoading(true));
+		setSearchString("");
 	}
 
 	const selectedGenreStyle = (genre) =>
