@@ -1,0 +1,15 @@
+.go-up-icon {
+	height: 25px;
+    cursor: pointer;
+    color: white;
+}
+
+.go-up-icon:hover {
+	color: crimson;
+}
+
+button {
+    background: black;
+    border: 1px solid black;
+    border-radius: 5px;
+}
