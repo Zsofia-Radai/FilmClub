@@ -1,13 +1,19 @@
-.page-container {
+.movies-container {
 	background: rgba(183, 43, 129, 0.25);
 	height: 100vh;
-    width: 60%;
-	margin: auto;
     overflow-y: scroll;
 }
 
-.page-container::-webkit-scrollbar {
+.movies-container::-webkit-scrollbar {
     display: none;
+}
+
+.page-container {
+    height: 100vh;
+    width: 60%;
+	margin: auto;
+    display: flex;
+    align-items: end;
 }
 
 .banner {
@@ -17,6 +23,8 @@
     border-radius: 5px;
 }
 
+
+/*TODO: resize */
 @media screen and (max-width: 800px) {
     .page-container {
         width: 100%;

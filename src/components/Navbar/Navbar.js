@@ -93,7 +93,7 @@ function Navbar() {
 	const selectedStyle = toggleCategories ? "item-selected" : "";
 
 	return (
-		<>
+		<div className="header">
 			<nav>
 				<MenuIcon
 					className="hamburger-icon"
@@ -146,7 +146,7 @@ function Navbar() {
 			</nav>
 
 			{toggleCategories && screenWidth > 1100 && categoriesSubmenu}
-		</>
+		</div>
 	);
 }
 

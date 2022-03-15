@@ -1,5 +1,4 @@
 nav {
-	position: relative;
 	background: black;
 	border-radius: 5px 5px 0 0;
 	margin: 2% 2% 0;
@@ -7,7 +6,13 @@ nav {
 	align-items: center;
 	color: white;
 	justify-content: space-between;
-	padding: 0 5px 0 5px ;
+	padding: 0 5px 0 5px;
+}
+
+.header {
+	position: -webkit-sticky; /* Safari */
+	position: sticky;
+	top: 0;
 }
 
 .menu {
@@ -28,12 +33,15 @@ nav {
 	color: #f1f1f1;
 	display: flex;
 	align-items: center;
-    transition: all 0.2s ease-in-out;
-    border: 1px solid black;
+	transition: all 0.2s ease-in-out;
+	border: 1px solid black;
 }
 
-.item:hover, .item-selected, .genre-item:hover, .logo:hover {
-    color: crimson;
+.item:hover,
+.item-selected,
+.genre-item:hover,
+.logo:hover {
+	color: crimson;
 	cursor: pointer;
 	transition: all 0.2s ease-in-out;
 }
@@ -73,20 +81,20 @@ nav {
 }
 
 .categories-submenu {
-    background: black;
-    padding: 5px;
-    margin: 0 2%;
-    color: white;
+	background: black;
+	padding: 5px;
+	margin: 0 2%;
+	color: white;
 	display: flex;
 	flex-wrap: wrap;
-    justify-content: center;
+	justify-content: center;
 	gap: 1vh;
 	border-radius: 0 0 5px 5px;
 }
 
 .submenu-separator {
 	background: black;
-    margin: 0 2%;
+	margin: 0 2%;
 }
 
 @media screen and (max-width: 1100px) {
@@ -107,7 +115,8 @@ nav {
 		height: auto;
 	}
 
-	.item, .search-input {
+	.item,
+	.search-input {
 		border-top: 1px solid rgba(255, 255, 255, 0.555);
 		text-align: center;
 		margin-right: 0px;
@@ -118,9 +127,11 @@ nav {
 		display: block;
 	}
 
-    .item:hover, .search-input:hover, .item-selected {
-        border-bottom: 1px solid black;
-        background-color: crimson;
-        color: black;
-    }
+	.item:hover,
+	.search-input:hover,
+	.item-selected {
+		border-bottom: 1px solid black;
+		background-color: crimson;
+		color: black;
+	}
 }
