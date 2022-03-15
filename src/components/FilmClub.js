@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import banner from "../resources/banner.jpg";
 import "./FilmClub.css";
 import Navbar from "./Navbar/Navbar";
-import ScrollButton from "./ScrollButton/ScrollButton";
+import ScrollUpButton from "./ScrollButton/ScrollUpButton";
 import { useRef } from "react";
 
 function FilmClub() {
@@ -15,7 +15,7 @@ function FilmClub() {
 				<Navbar />
 				<Outlet />
 			</div>
-			<ScrollButton elementRef={moviesContainerRef} />
+			<ScrollUpButton elementRef={moviesContainerRef} />
 		</div>
 	);
 }

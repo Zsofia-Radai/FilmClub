@@ -1,15 +1,18 @@
 import { ChevronUpIcon } from "@heroicons/react/solid";
+import { useEffect } from "react";
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
-import "./ScrollButton.css";
+import "./ScrollUpButton.css";
 
-function ScrollButton({ elementRef }) {
+function ScrollUpButton({ elementRef }) {
 	const [visible, setVisible] = useState(false);
 
-    //TODO: make it work
+	useEffect(() => {
+		elementRef.current.addEventListener("scroll", toggleVisible);
+	})
+
 	const toggleVisible = () => {
 		const scrolled = elementRef.current.scrollTop;
-		console.log(scrolled);
 		if (scrolled > 300) {
 			setVisible(true);
 		} else if (scrolled <= 300) {
@@ -21,13 +24,11 @@ function ScrollButton({ elementRef }) {
 		elementRef.current.scrollTo(0, 0);
 	};
 
-	window.addEventListener("scroll", toggleVisible);
-
-	return (
+	return ( visible &&
 		<Button onClick={scrollToTop}>
 			<ChevronUpIcon className="go-up-icon" />
 		</Button>
 	);
 }
 
-export default ScrollButton;
+export default ScrollUpButton;
