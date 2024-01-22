@@ -1,17 +1,18 @@
-import "./Poster.css";
+import { useDispatch } from "react-redux";
+import { useNavigate } from 'react-router-dom';
 import ReactTooltip from "react-tooltip";
 import star from "../../resources/gold_star.png";
 import NAPoster from "../../resources/no_poster.png";
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from "react-redux";
-import { moviesActions } from "../../store/moviesSlice"
+import { moviesActions } from "../../store/moviesSlice";
+import "./Poster.css";
 
 const poster_base_url = "https://image.tmdb.org/t/p/original/";
 
-function Poster({ movie }) {
+function Poster({ movie, posterClicked }) {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
+	console.log(posterClicked);
 	const tooltip = (
 		<>
 			{movie.title} ({movie.release_date?.substring(0, 4)}) <br />

@@ -1,8 +1,9 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ClipLoader from "react-spinners/ClipLoader";
 import useMovieSearch from "../../hooks/useMovieSearch";
 import { moviesActions } from "../../store/moviesSlice";
+import MovieDetail from "../MovieDetail/MovieDetail";
 import Poster from "../Poster/Poster";
 import "./MovieGrid.css";
 
@@ -11,6 +12,7 @@ function MovieGrid() {
 	const loading = useSelector((state) => state.loading);
 	const pageNumber = useSelector((state) => state.pageNumber);
 	const dispatch = useDispatch();
+	const [showMovieDetailDialog, setShowMovieDetailDialog] = useState(false);
 	const observer = useRef();
 
 	const { hasMore, isLoading, error } = useMovieSearch(pageNumber);
@@ -29,13 +31,23 @@ function MovieGrid() {
 		[isLoading, hasMore, dispatch, pageNumber]
 	);
 
+	function handlePosterClick() {
+		/* dispatch(moviesActions.setSelectedMovieId(movieId)); */
+		console.log("should show")
+		console.log(showMovieDetailDialog);
+		setShowMovieDetailDialog(true);
+	}
+
 	let posters = (
 		<div className="movie-grid">
 			{movies?.map((movie, index) => {
 				if (movies.length === index + 1) {
 					return (
 						<div key={movie.id} ref={lastMovieElementRef}>
-							<Poster movie={movie} />
+							<Poster
+								movie={movie}
+								posterClicked={handlePosterClick}
+							/>
 						</div>
 					);
 				} else {
@@ -56,7 +68,10 @@ function MovieGrid() {
 	return loading ? (
 		<ClipLoader />
 	) : movies.length > 0 ? (
-		<div>{posters}</div>
+		<>
+			<div>{posters}</div>
+			{showMovieDetailDialog && <MovieDetail />}
+		</>
 	) : (
 		displayedMessage()
 	);

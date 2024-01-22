@@ -25,7 +25,7 @@ function ScrollUpButton({ elementRef }) {
 	};
 
 	return ( visible &&
-		<Button onClick={scrollToTop}>
+		<Button className="go-up-button" onClick={scrollToTop}>
 			<ChevronUpIcon className="go-up-icon" />
 		</Button>
 	);
