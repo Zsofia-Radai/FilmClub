@@ -36,11 +36,14 @@ function useMovieSearch(pageNumber) {
 			cancelToken: new axios.CancelToken((c) => (cancel = c)),
 		})
 			.then((res) => {
+				let movieIds = movies.map(movie => movie.id);
+				let uniqueMovies = res.data.results.filter(movie => !movieIds.includes(movie.id));
 				dispatch(
 					moviesActions.setMovies([
-						...new Set([...movies, ...res.data.results]),
+						...new Set([...movies, ...uniqueMovies]),
 					])
 				);
+				console.log(movies);
 				setHasMore(res.data.results.length > 0);
 				dispatch(moviesActions.setLoading(false));
 				setIsLoading(false);
@@ -51,7 +54,7 @@ function useMovieSearch(pageNumber) {
 				dispatch(moviesActions.setLoading(false));
 				setIsLoading(false);
 			});
-		return cancel;
+		return () => cancel();
 	}, [pageNumber, selectedGenre, query, dispatch]);
 
 	return { isLoading, error, movies, hasMore };
