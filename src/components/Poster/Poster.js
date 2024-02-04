@@ -8,7 +8,7 @@ import { moviesActions } from "../../store/moviesSlice"
 
 const poster_base_url = "https://image.tmdb.org/t/p/original/";
 
-function Poster({ movie }) {
+function Poster({ movie, posterClicked }) {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
@@ -19,11 +19,6 @@ function Poster({ movie }) {
 		</>
 	);
 
-	function handlePosterClick() {
-		dispatch(moviesActions.setSelectedMovieId(movie.id));
-		setTimeout(() => navigate(`/movies/${movie.id}`), 100);
-	}
-
 	return (
 		<>
 			<img
@@ -32,7 +27,7 @@ function Poster({ movie }) {
 				className="movie-thumbnail"
 				src={movie.poster_path ? `${poster_base_url}${movie.poster_path}` : NAPoster}
 				alt="poster"
-				onClick={() => handlePosterClick()}
+				onClick={posterClicked}
 			/>
 
 			<ReactTooltip

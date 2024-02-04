@@ -10,7 +10,7 @@ import "./MovieDetail.css";
 const poster_base_url = "https://image.tmdb.org/t/p/original/";
 const API_KEY = "fb5d4cfa32b7892d5edfc3c7d7a15454";
 
-function MovieDetail() {
+function MovieDetail({close}) {
 	const movieId = useSelector((state) => state.selectedMovieId);
 	const [movieDetails, setMovieDetails] = useState();
 	const [isLoading, setIsLoading] = useState(true);
@@ -74,7 +74,7 @@ function MovieDetail() {
 					</div>
 				)}
 			</div>
-			<RewindIcon className="back-icon" onClick={() => navigate(-1)} />
+			<RewindIcon className="back-icon" onClick={close} />
 		</>
 	);
 }
