@@ -14,6 +14,7 @@ function MovieGrid() {
 	const [showMovieDetails, setshowMovieDetails] = useState(false);
 	const dispatch = useDispatch();
 	const observer = useRef();
+	const movieGridRef = useRef();
 
 	const { hasMore, isLoading, error } = useMovieSearch(pageNumber);
 
@@ -48,7 +49,9 @@ function MovieGrid() {
 						<div key={movie.id} ref={lastMovieElementRef}>
 							<Poster
 								movie={movie}
-								posterClicked={() => handlePosterClicked(movie.id)}
+								posterClicked={() =>
+									handlePosterClicked(movie.id)
+								}
 							/>
 						</div>
 					);
@@ -57,7 +60,9 @@ function MovieGrid() {
 						<Poster
 							key={movie.id}
 							movie={movie}
-							posterClicked={() => handlePosterClicked(movie.id)}
+							posterClicked={() =>
+								handlePosterClicked( movie.id)
+							}
 						/>
 					);
 				}
@@ -76,13 +81,35 @@ function MovieGrid() {
 	return loading ? (
 		<ClipLoader />
 	) : movies.length > 0 ? (
-		<div>
-			{!showMovieDetails ? (
-				posters
-			) : (
-				<MovieDetail close={handleMovieDetailsClosed} />
-			)}
-		</div>
+		<>
+			<div ref={movieGridRef}>
+				<div
+					style={
+						showMovieDetails
+							? { position: "relative", zIndex: 0 }
+							: { display: "block" }
+					}
+				>
+					{posters}
+				</div>
+				{showMovieDetails && (
+					<div
+						style={
+							showMovieDetails
+								? {
+										position: "absolute",
+										top: 0,
+										left: 0,
+										zIndex: 2,
+								  }
+								: {}
+						}
+					>
+						<MovieDetail close={handleMovieDetailsClosed} />
+					</div>
+				)}
+			</div>
+		</>
 	) : (
 		displayedMessage()
 	);

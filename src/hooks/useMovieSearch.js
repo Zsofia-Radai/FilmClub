@@ -43,7 +43,6 @@ function useMovieSearch(pageNumber) {
 						...new Set([...movies, ...uniqueMovies]),
 					])
 				);
-				console.log(movies);
 				setHasMore(res.data.results.length > 0);
 				dispatch(moviesActions.setLoading(false));
 				setIsLoading(false);
