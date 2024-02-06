@@ -84,11 +84,11 @@ function MovieGrid() {
 		<>
 			<div ref={movieGridRef}>
 				<div
-					style={
-						showMovieDetails
-							? { position: "relative", zIndex: 0 }
-							: { display: "block" }
-					}
+					style={{
+						position: 'relative',
+						zIndex: 0,
+						visibility: showMovieDetails ? 'hidden' : 'visible',
+					  }}
 				>
 					{posters}
 				</div>
@@ -98,9 +98,11 @@ function MovieGrid() {
 							showMovieDetails
 								? {
 										position: "absolute",
-										top: 0,
+										top: 60,
 										left: 0,
 										zIndex: 2,
+										margin: '0 20%',
+										height: '100%',
 								  }
 								: {}
 						}
