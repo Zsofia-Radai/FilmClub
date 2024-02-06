@@ -1,4 +1,10 @@
-import { useCallback, useRef } from "react";
+import {
+	useCallback,
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ClipLoader from "react-spinners/ClipLoader";
 import useMovieSearch from "../../hooks/useMovieSearch";
@@ -10,6 +16,8 @@ function MovieGrid() {
 	const movies = useSelector((state) => state.movies);
 	const loading = useSelector((state) => state.loading);
 	const pageNumber = useSelector((state) => state.pageNumber);
+	const containerRef = useRef(null);
+	const [scrollPosition, setScrollPosition] = useState(0);
 	const dispatch = useDispatch();
 	const observer = useRef();
 
@@ -28,6 +36,26 @@ function MovieGrid() {
 		},
 		[isLoading, hasMore, dispatch, pageNumber]
 	);
+
+	// Effect to restore scroll position when mounting
+	useLayoutEffect(() => {
+		if (containerRef.current) {
+			containerRef.current.scrollTop = scrollPosition;
+			containerRef.current.scrollIntoView({
+				behavior: "instant",
+				block: "center", // Align to the top, // Align to the nearest edge
+			});
+		}
+	}, [scrollPosition]);
+
+	// Effect to persist scroll position when unmounting
+	useEffect(() => {
+		return () => {
+			if (containerRef.current) {
+				setScrollPosition(containerRef.current.scrollTop);
+			}
+		};
+	}, []);
 
 	let posters = (
 		<div className="movie-grid">
@@ -56,7 +84,7 @@ function MovieGrid() {
 	return loading ? (
 		<ClipLoader />
 	) : movies.length > 0 ? (
-		<div>{posters}</div>
+		<div ref={containerRef}>{posters}</div>
 	) : (
 		displayedMessage()
 	);

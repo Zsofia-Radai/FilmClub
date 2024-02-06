@@ -74,7 +74,7 @@ function MovieDetail() {
 					</div>
 				)}
 			</div>
-			<RewindIcon className="back-icon" onClick={() => navigate(-1)} />
+			<RewindIcon className="back-icon" onClick={() => window.history.back()} />
 		</>
 	);
 }
