@@ -1,11 +1,6 @@
 .movies-container {
 	background: rgba(183, 43, 129, 0.25);
 	height: 100vh;
-    overflow-y: scroll;
-}
-
-.movies-container::-webkit-scrollbar {
-    display: none;
 }
 
 .page-container {

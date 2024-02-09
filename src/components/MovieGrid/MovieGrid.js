@@ -1,10 +1,4 @@
-import {
-	useCallback,
-	useEffect,
-	useLayoutEffect,
-	useRef,
-	useState,
-} from "react";
+import { useCallback, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ClipLoader from "react-spinners/ClipLoader";
 import useMovieSearch from "../../hooks/useMovieSearch";
@@ -17,9 +11,9 @@ function MovieGrid() {
 	const loading = useSelector((state) => state.loading);
 	const pageNumber = useSelector((state) => state.pageNumber);
 	const containerRef = useRef(null);
-	const [scrollPosition, setScrollPosition] = useState(0);
 	const dispatch = useDispatch();
 	const observer = useRef();
+	let scrollDebounce;
 
 	const { hasMore, isLoading, error } = useMovieSearch(pageNumber);
 
@@ -37,24 +31,28 @@ function MovieGrid() {
 		[isLoading, hasMore, dispatch, pageNumber]
 	);
 
-	// Effect to restore scroll position when mounting
+	function handleScroll() {
+		clearTimeout(scrollDebounce);
+
+		if(containerRef.current) {
+			scrollDebounce = setTimeout(() => {
+				localStorage.setItem(
+					"scrollPosition",
+					containerRef.current?.scrollTop
+				);
+			}, 300);
+		}
+	}
+
 	useLayoutEffect(() => {
 		if (containerRef.current) {
-			containerRef.current.scrollTop = scrollPosition;
-			containerRef.current.scrollIntoView({
-				behavior: "instant",
-				block: "center", // Align to the top, // Align to the nearest edge
-			});
-		}
-	}, [scrollPosition]);
+			const scrollPosition = localStorage.getItem("scrollPosition");
 
-	// Effect to persist scroll position when unmounting
-	useEffect(() => {
-		return () => {
-			if (containerRef.current) {
-				setScrollPosition(containerRef.current.scrollTop);
+			//coming back to original poster position from details page
+			if (scrollPosition > 0) {
+				containerRef.current.scrollTop = scrollPosition;
 			}
-		};
+		}
 	}, []);
 
 	let posters = (
@@ -84,7 +82,13 @@ function MovieGrid() {
 	return loading ? (
 		<ClipLoader />
 	) : movies.length > 0 ? (
-		<div ref={containerRef}>{posters}</div>
+		<div
+			className="movies-container"
+			ref={containerRef}
+			onScroll={handleScroll}
+		>
+			{posters}
+		</div>
 	) : (
 		displayedMessage()
 	);

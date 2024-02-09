@@ -1,7 +1,6 @@
 import { RewindIcon } from "@heroicons/react/solid";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 import axios from "../../axios";
 import NAPoster from "../../resources/no_poster.png";
@@ -15,7 +14,6 @@ function MovieDetail() {
 	const [movieDetails, setMovieDetails] = useState();
 	const [isLoading, setIsLoading] = useState(true);
 	const [credits, setCredits] = useState();
-	const navigate = useNavigate();
 
 	//TODO: outsource this function (put it in the store)
 	useEffect(() => {
